@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    // DOM elements
+   
     const metricsList = document.getElementById('metrics-list');
     const metricForm = document.getElementById('metric-form');
     const metricModal = document.getElementById('metric-modal');
@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const cancelModalBtn = document.getElementById('cancel-metric');
     const applyFiltersBtn = document.getElementById('apply-filters');
 
-    // Initialize date filters
+   
     initDateFilters();
 
-    // Load metrics with default filters
+    
     loadMetrics();
     setupEventListeners();
 
@@ -31,19 +31,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function setupEventListeners() {
-        // Modal controls
+        
         addMetricBtn?.addEventListener('click', showAddMetricModal);
         closeModalBtn?.addEventListener('click', closeModal);
         cancelModalBtn?.addEventListener('click', closeModal);
 
-        // Form submission
+        
         metricForm?.addEventListener('submit', handleMetricSubmit);
 
-        // Filter controls
+        
         applyFiltersBtn?.addEventListener('click', loadMetrics);
         document.getElementById('metric-type')?.addEventListener('change', updateSummary);
 
-        // Logout button
+       
         document.getElementById('logout')?.addEventListener('click', function (e) {
             e.preventDefault();
             localStorage.removeItem('user_id');
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
         `).join('');
 
-        // Add event listeners to action buttons
+        
         document.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', () => editMetric(btn.dataset.id));
         });
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('form-value').value = metric.value;
                     document.getElementById('form-unit').value = metric.unit;
 
-                    // Convert recorded_at to local datetime string
+                    
                     const recordedAt = new Date(metric.recorded_at);
                     const offset = recordedAt.getTimezoneOffset() * 60000;
                     const localISOTime = new Date(recordedAt - offset).toISOString().slice(0, 16);
@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return new Date(dateString).toLocaleString();
     }
 
-    // Check URL for add new parameter
+    
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('add')) {
         addMetricBtn.click();
