@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Redirect if already logged in
+
     if (localStorage.getItem('user_id') && !window.location.pathname.endsWith('index.html')) {
         window.location.href = 'dashboard.html';
         return;
     }
 
-    // Form toggling
     document.getElementById('show-register')?.addEventListener('click', function (e) {
         e.preventDefault();
         document.getElementById('login-form').classList.add('hidden');
@@ -18,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('login-form').classList.remove('hidden');
     });
 
-    // Login form
+    
     document.getElementById('login')?.addEventListener('submit', async function (e) {
         e.preventDefault();
         const username = document.getElementById('login-username').value;
@@ -43,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Registration form
+   
     document.getElementById('register')?.addEventListener('submit', async function (e) {
         e.preventDefault();
         const username = document.getElementById('register-username').value;
@@ -69,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Registration error:', error);
         }
     });
-    // Add this to your auth.js file
+  
     document.getElementById('logout')?.addEventListener('click', function (e) {
         e.preventDefault();
         logoutUser();
