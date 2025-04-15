@@ -2,20 +2,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('Dashboard initialization started');
 
     try {
-        // Verify authentication
+        
         const userId = localStorage.getItem('user_id');
         if (!userId) {
             window.location.href = 'index.html';
             return;
         }
 
-        // Initialize the current date display
+        
         updateDateDisplay();
 
-        // Load and display data
+        
         await loadAndDisplayHealthData();
 
-        // Set up chart controls
+        
         document.getElementById('chart-metric')?.addEventListener('change', () => {
             fetchHealthMetrics().then(initializeHealthChart);
         });
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 let healthChart = null;
 
-// Update date display in welcome banner
+
 function updateDateDisplay() {
     const dateElement = document.getElementById('current-date');
     if (dateElement) {
@@ -116,15 +116,15 @@ async function fetchHealthMetrics() {
 
 function updateSummaryCards(metrics) {
     try {
-        // Update weight summary
+       
         const weightMetrics = metrics.filter(m => m.metric_type === 'Weight');
         updateSummaryCard('weight-summary', 'weight-trend', weightMetrics);
 
-        // Update blood pressure summary
+    
         const bpMetrics = metrics.filter(m => m.metric_type === 'Blood Pressure');
         updateSummaryCard('bp-summary', 'bp-trend', bpMetrics);
 
-        // Update blood sugar summary
+        
         const sugarMetrics = metrics.filter(m => m.metric_type === 'Blood Sugar');
         updateSummaryCard('sugar-summary', 'sugar-trend', sugarMetrics);
     } catch (error) {
@@ -145,10 +145,10 @@ function updateSummaryCard(valueId, trendId, metrics) {
         return;
     }
 
-    // Sort by date, most recent first
+    
     metrics.sort((a, b) => new Date(b.recorded_at) - new Date(a.recorded_at));
 
-    // Get latest reading
+    
     const latest = metrics[0];
     const date = new Date(latest.recorded_at);
     const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -158,12 +158,12 @@ function updateSummaryCard(valueId, trendId, metrics) {
         <span class="date">${formattedDate}</span>
     `;
 
-    // Calculate trend if we have previous data
+   
     if (metrics.length > 1) {
         const previous = metrics[1];
         let currentValue, previousValue;
         
-        // Handle blood pressure which has format like "120/80"
+        
         if (latest.metric_type === 'Blood Pressure') {
             currentValue = parseInt(latest.value.split('/')[0]);
             previousValue = parseInt(previous.value.split('/')[0]);
@@ -176,11 +176,11 @@ function updateSummaryCard(valueId, trendId, metrics) {
             const diff = ((currentValue - previousValue) / previousValue) * 100;
             const trendClass = diff > 0 ? 'up' : diff < 0 ? 'down' : 'neutral';
             
-            // For weight, up is bad and down is good
+           
             const isPositive = latest.metric_type === 'Weight' ? diff < 0 : diff > 0;
             const trendIcon = isPositive ? 'fa-arrow-up' : 'fa-arrow-down';
             
-            // Add appropriate messaging
+            
             let trendMessage = '';
             if (latest.metric_type === 'Weight') {
                 trendMessage = diff < 0 ? 'decreased' : 'increased';
@@ -209,19 +209,19 @@ async function initializeHealthChart() {
         const ctx = document.getElementById('health-trend-chart');
         if (!ctx) return;
 
-        // Destroy previous chart if exists
+        
         if (window.healthChart) {
             window.healthChart.destroy();
         }
 
-        // Show loading state
+        
         document.getElementById('chart-trend-value').textContent = 'Loading data...';
 
-        // Get selected filters
+        
         const metricType = document.getElementById('chart-metric').value;
         const days = parseInt(document.getElementById('chart-period').value);
 
-        // Fetch metrics data
+       
         const metrics = await fetchHealthMetrics();
         const filteredMetrics = metrics.filter(m => m.metric_type === metricType);
 
@@ -230,10 +230,10 @@ async function initializeHealthChart() {
             return;
         }
 
-        // Process data for chart
+    
         const { labels, values } = processChartData(filteredMetrics, days);
 
-        // Create the chart
+       
         window.healthChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -307,7 +307,7 @@ async function initializeHealthChart() {
             }
         });
 
-        // Update trend insight
+        
         updateTrendInsight(filteredMetrics, metricType);
 
     } catch (error) {
@@ -325,33 +325,33 @@ function updateTrendInsight(metrics, metricType) {
         return;
     }
 
-    // Sort metrics by date (oldest first for trend analysis)
+    
     metrics.sort((a, b) => new Date(a.recorded_at) - new Date(b.recorded_at));
     
-    // Extract values for analysis
+    
     let values = [];
     
     if (metricType === 'Blood Pressure') {
-        // For BP, use the systolic (top) number
+        
         values = metrics.map(m => parseInt(m.value.split('/')[0]));
     } else {
         values = metrics.map(m => parseFloat(m.value));
     }
     
-    // Calculate trend
+    
     const firstValue = values[0];
     const lastValue = values[values.length - 1];
     const percentChange = ((lastValue - firstValue) / firstValue) * 100;
     
-    // Calculate average
+    
     const average = values.reduce((sum, val) => sum + val, 0) / values.length;
     
-    // Calculate variance (how much values fluctuate)
+    
     const variance = values.reduce((sum, val) => sum + Math.pow(val - average, 2), 0) / values.length;
     const standardDeviation = Math.sqrt(variance);
     const variabilityPercent = (standardDeviation / average) * 100;
     
-    // Generate insight based on metric type
+    
     let insight = '';
     
     if (metricType === 'Weight') {
@@ -375,7 +375,7 @@ function updateTrendInsight(metrics, metricType) {
             insight = `Your systolic blood pressure has increased by ${percentChange.toFixed(1)}% over this period.`;
         }
         
-        // Add guidance based on the average reading
+        
         if (average < 120) {
             insight += ` Your readings are within normal range.`;
         } else if (average < 130) {
@@ -401,10 +401,10 @@ function updateTrendInsight(metrics, metricType) {
 }
 
 function processChartData(metrics, days) {
-    // Sort by date (oldest first for chart data)
+    
     metrics.sort((a, b) => new Date(a.recorded_at) - new Date(b.recorded_at));
     
-    // Filter by timeframe
+    
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
     const filteredMetrics = metrics.filter(m => new Date(m.recorded_at) >= cutoffDate);
@@ -417,7 +417,7 @@ function processChartData(metrics, days) {
         labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
         
         if (metric.metric_type === 'Blood Pressure') {
-            // For BP, use the systolic (top) number
+            
             const systolic = parseInt(metric.value.split('/')[0]);
             values.push(systolic);
         } else {
