@@ -1,4 +1,4 @@
-// Common functions used across all pages
+
 async function logoutUser() {
     try {
         const response = await fetch('/logout', {
@@ -13,10 +13,10 @@ async function logoutUser() {
             throw new Error('Logout failed');
         }
 
-        // Clear user data
+       
         localStorage.removeItem('user_id');
 
-        // Redirect to login page
+        
         window.location.href = '/index.html';
     } catch (error) {
         console.error('Logout error:', error);
@@ -24,5 +24,5 @@ async function logoutUser() {
     }
 }
 
-// Add this to make the function available globally
+
 window.logoutUser = logoutUser;
